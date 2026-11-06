@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { menu, rupiah } from "@/data/menu";
+import FormPesan from "@/components/FormPesan";
 
 export default async function DetailMenu({
   params,
@@ -10,35 +11,26 @@ export default async function DetailMenu({
   const { id } = await params;
   const item = menu.find((m) => m.id === Number(id));
 
-  if (!item) {
-    notFound();
-  }
-
-  const habis = item.stok === 0;
+  if (!item) notFound();
 
   return (
-    <article className="max-w-xl rounded-xl border bg-white p-6 shadow-sm">
-      <span className="rounded bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700">
+    <article className="rounded-xl border bg-white p-6">
+      <span className="rounded bg-blue-100 px-2 py-0.5 text-xs text-blue-700">
         {item.kategori}
       </span>
-      <h1 className="mt-3 text-3xl font-bold text-slate-900">{item.nama}</h1>
-      <p className="mt-2 text-2xl font-semibold text-slate-800">{rupiah(item.harga)}</p>
-      
-      <div className="mt-4 border-t pt-4">
-        <p className={`text-base ${habis ? "font-semibold text-red-600" : "text-slate-600"}`}>
-          Status: {habis ? "Habis" : `Tersedia (${item.stok} porsi)`}
-        </p>
-      </div>
+      <h1 className="mt-2 text-3xl font-bold text-slate-900">{item.nama}</h1>
+      <p className="mt-4 text-xl font-semibold text-slate-900">{rupiah(item.harga)}</p>
+      <p className="text-slate-600">
+        {item.stok === 0 ? "Stok habis" : `Tersedia ${item.stok} porsi`}
+      </p>
 
-      <div className="mt-6 flex items-center gap-4">
-        <Link
-          href="/menu"
-          className="rounded border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition"
-        >
-          ← Kembali ke Menu
+      <FormPesan menu={item} />
+
+      <div className="mt-6 border-t pt-4">
+        <Link href="/menu" className="text-blue-600 hover:underline">
+          ← Kembali ke katalog
         </Link>
       </div>
     </article>
   );
 }
-
