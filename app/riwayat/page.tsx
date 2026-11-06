@@ -16,76 +16,44 @@ export default function HalamanRiwayat() {
   }, []);
 
   if (!sudahLoad) {
-    return <p className="py-12 text-center text-slate-500">Memuat riwayat...</p>;
+    return <p className="py-6 text-slate-500">Memuat...</p>;
   }
 
   if (riwayat.length === 0) {
-    return (
-      <div className="py-16 text-center">
-        <h1 className="text-2xl font-bold text-slate-800">Riwayat Pesanan</h1>
-        <p className="mt-3 text-slate-500">Belum ada riwayat pesanan.</p>
-        <Link
-          href="/menu"
-          className="mt-6 inline-block rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white hover:bg-blue-700"
-        >
-          Pesan Menu Sekarang
-        </Link>
-      </div>
-    );
+    return <p className="py-6 text-slate-500">Belum ada pesanan.</p>;
   }
+
+  const totalBelanja = riwayat.reduce((acc, p) => acc + p.total, 0);
 
   return (
     <div className="max-w-2xl">
-      <h1 className="mb-6 text-2xl font-bold text-slate-900">Riwayat Pesanan</h1>
-      <div className="space-y-4">
-        {riwayat.map((p) => (
-          <div key={p.id} className="rounded-xl border bg-white p-5 shadow-sm">
-            <div className="flex items-center justify-between border-b pb-3">
-              <div>
-                <p className="font-semibold text-slate-800">{p.nama}</p>
-                <p className="text-xs text-slate-500">{p.tanggal} · {p.id}</p>
+      <h1 className="mb-2 text-2xl font-bold">Riwayat Pesanan</h1>
+      <p className="mb-4 text-sm text-slate-600">
+        Ringkasan {riwayat.length} pesanan, total belanja {rupiah(totalBelanja)}
+      </p>
+
+      <div className="space-y-3">
+        {riwayat.map((p) => {
+          const totalPorsi = p.items.reduce((acc, it) => acc + it.jumlah, 0);
+          return (
+            <div key={p.id} className="rounded-xl border bg-white p-4 shadow-sm">
+              <div className="flex justify-between font-semibold text-slate-800">
+                <span>{p.nama}</span>
+                <span className="text-xs text-slate-500">{p.tanggal}</span>
               </div>
-              <span className="rounded bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
-                {p.caraAmbil === "Diantar" ? `Diantar (${p.kelas})` : "Ambil Sendiri"}
-              </span>
-            </div>
-
-            <div className="mt-3 space-y-1 text-sm text-slate-600">
-              {p.items.map((it, idx) => (
-                <div key={idx} className="flex justify-between">
-                  <span>{it.nama} x{it.jumlah}</span>
-                  <span className="font-medium text-slate-800">{rupiah(it.subtotal)}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-3 border-t pt-2 text-xs text-slate-500 space-y-1">
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>{rupiah(p.subtotal)}</span>
+              <p className="mt-1 text-sm text-slate-600">
+                {totalPorsi} menu ({p.items.map((it) => `${it.nama} x${it.jumlah}`).join(", ")})
+              </p>
+              <div className="mt-2 flex justify-between border-t pt-2 text-sm">
+                <span className="text-slate-500">
+                  {p.caraAmbil === "Diantar" ? `Diantar (${p.kelas})` : "Ambil sendiri"}
+                </span>
+                <span className="font-bold text-slate-900">{rupiah(p.total)}</span>
               </div>
-              {p.diskon > 0 && (
-                <div className="flex justify-between text-green-600">
-                  <span>Diskon</span>
-                  <span>- {rupiah(p.diskon)}</span>
-                </div>
-              )}
-              {p.ongkir > 0 && (
-                <div className="flex justify-between">
-                  <span>Ongkir</span>
-                  <span>{rupiah(p.ongkir)}</span>
-                </div>
-              )}
             </div>
-
-            <div className="mt-3 flex justify-between border-t pt-2 font-bold text-slate-900">
-              <span>Total Bayar</span>
-              <span className="text-blue-600">{rupiah(p.total)}</span>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
 }
-

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { menu, rupiah } from "@/data/menu";
 import FormPesan from "@/components/FormPesan";
+import TombolFavorit from "@/components/TombolFavorit";
 
 export default async function DetailMenu({
   params,
@@ -24,6 +25,7 @@ export default async function DetailMenu({
         {item.stok === 0 ? "Stok habis" : `Tersedia ${item.stok} porsi`}
       </p>
 
+      <TombolFavorit id={item.id} />
       <FormPesan menu={item} />
 
       <div className="mt-6 border-t pt-4">

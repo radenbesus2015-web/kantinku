@@ -71,7 +71,7 @@ export default function HalamanKeranjang() {
   function handlePesan(nama: string, kelas: string) {
     const data: PesananRiwayat = {
       id: "ORD-" + Date.now(),
-      tanggal: new Date().toLocaleDateString("id-ID"),
+      tanggal: new Date().toLocaleString("id-ID"),
       nama,
       caraAmbil,
       kelas: caraAmbil === "Diantar" ? kelas : undefined,
